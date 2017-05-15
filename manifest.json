@@ -1,0 +1,48 @@
+{
+	"manifest_version": 2,
+	"name": "ReadMember",
+	"version": "1.0",
+	
+	"description": "Save Goodreads in a Kinto Server",
+	
+	"icons": {
+		"48": "icons/icon.svg",
+		"96": "icons/icon.svg"
+	},
+	"applications": {
+		"gecko": {
+			"id": "extension@readmember.elelay.fr"
+		}
+	},
+	"background": {
+		"scripts": [
+			"CryptoJS/rollups/hmac-sha1.js",
+			"CryptoJS/components/enc-base64-min.js",
+			"oauth-1.0a.js",
+			"readmember/settings.js",
+			"readmember/bgreads.js",
+			"readmember/boauth.js",
+			"readmember/background.js"
+		]
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://*.goodreads.com/api/keys"],
+			"js": ["readmember/getkey.js"]
+		}
+	],
+	"permissions": [
+		"*://*.goodreads.com/*",
+		"*://readmember.elelay.fr/*",
+  	  	"webRequest",
+  	  	"webRequestBlocking",
+  	  	"notifications",
+  	  	"storage"
+  	],
+  	"options_ui": {
+  		"page": "pages/options.html"
+  	},
+  	"browser_action": {
+  		"default_icon": "icons/icon.svg"
+  	}
+}

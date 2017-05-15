@@ -1,0 +1,28 @@
+#alert-no-goodreads {
+	background: salmon;
+	color: white;
+	font-weight: bold;
+	padding: 0.5em 1.5em 0.5em 2em;
+	text-align: justify;
+	margin-bottom: 1.5em;
+	border: solid 1px #f0f0f0;
+    position: relative;
+}
+
+#alert-no-goodreads a, #alert-no-goodreads a:visited {
+	color: lightgray;
+}
+
+.footer {
+	margin-top: 5em;
+	border-top: solid 1px lightgray;
+	padding-top: 1em;
+	text-align: right;
+	padding-right: 4em;
+}
+
+#open-settings, #open-settings:visited {
+	color: #888;
+	text-decoration: none;
+	font-weight: bold;
+}

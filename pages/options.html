@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="options.css">
+	</head>
+
+<body>
+
+	<h3>Goodreads Integration</h3>
+	<div class="info">
+		<p>ReadMember requires that you register an application in Goodreads.
+		Normally it's up to the application developper (me) to do it, but as all happens
+		client-side, I don't want to entrust everybody with the secret key (if the application
+		gets banned by somebody exploiting the credentials, everybody would be blocked).</p>
+		<p>That way, you don't have to trust me: review the code of the extension,
+		self-host the data; and I don't have to trust you: the extension is registered
+		at Goodreads to your name only.</p>
+	</div>
+
+	<div id="goodreads_enable_link" class="hide">
+	<p><a href="https://www.goodreads.com/api/keys">Click Here</a>
+	to register a new application. You can leave the <i>Application</i> and <i>Callback</i> URL blank.
+	</p>
+	</div>
+	<div id="goodreads_params">
+	<fieldset>
+	<legend>Oauth</legend>
+	<p class="info-text">The application is registered and has got following credentials :</p>
+	<p>
+	<label>Application Key</label>
+	<input type="text" id="app_key">
+	<label>Secret</label>
+	<input type="text" id="app_secret">
+	<a target="_blank" href="https://www.goodreads.com/api/keys">(manage)</a>
+	</p>
+	<p>
+	<label>OAuth Token</label>
+	<input type="text" id="token">
+	<label>Secret</label>
+	<input type="text" id="token_secret">
+	<a target="_blank" href="https://www.goodreads.com/user/edit?format=html&tab=apps#oauth_tokens">(manage)</a>
+	</p>
+	</fieldset>
+	</div>
+
+	<h3>Kinto Hosting</h3>
+	<div class="info">
+		<p>ReadMember stores your Goodreads data in local storage in your browser.</p>
+		<p>It's better when it's hosted somewhere for backup.</p>
+	</div>
+	<div>
+	<p><label><input type="checkbox" id="kinto_enable"> Host in Kinto</label></p>
+	<fieldset>
+	<legend>Server</legend>
+	<p>
+	<label>Url</label>
+	<input type="text" id="kinto_url">
+	</p>
+	<p>
+	<label>User/Password</label>
+	<input type="text" id="kinto_password">
+	<button id="kinto_gen">Generate</button>
+	</p>
+	</fieldset>
+	</div>
+
+	<script src="/readmember/settings.js"></script>
+	<script src="options.js"></script>
+</body>
+
+</html>
