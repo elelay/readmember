@@ -1,3 +1,7 @@
+import BOAuth from './boauth';
+import BGReads from './bgreads';
+import { getCredentials, setCredentials, setAccessToken } from './settings';
+
 var boauth;
 var bgreads = new BGReads();
 browser.runtime.onMessage.addListener(notify);
@@ -68,7 +72,7 @@ getCredentials().then(function(creds){
 
 function openBookshelves(){
    browser.tabs.create({
-     "url": "/pages/index.html"
+     "url": "/pages/viewer.html"
    });
 }
 

@@ -26,3 +26,19 @@
 	text-decoration: none;
 	font-weight: bold;
 }
+
+.reviews ul {
+	list-style: none;
+}
+
+.review {
+	margin-bottom: 1em;
+}
+
+.review a, .review em, .review img {
+	vertical-align: middle;
+}
+
+.review img {
+	margin-right: 1em;
+}

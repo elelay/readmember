@@ -1,4 +1,4 @@
-Queue = function(){
+var Queue = function(){
 	var self = this;
 
 	var requestQueue = [];
@@ -36,11 +36,12 @@ Queue = function(){
 }
 
 
-BGReads = function() {
-	var self = this;
-	self.queue = new Queue();
+export default class BGReads {
+	constructor() {
+		this.queue = new Queue();
+	}
 	
-	function getXMLText(xml, selector) {
+	getXMLText(xml, selector) {
 		var elt = xml.querySelector(selector);
 		if(elt){
 			return elt.textContent;
@@ -50,7 +51,7 @@ BGReads = function() {
 		}
 	}
 	
-	function getTypedXML(elt) {
+	getTypedXML(elt) {
 		var nil = elt.getAttribute("nil");
 		if(nil === "true"){
 			return null;
@@ -60,6 +61,14 @@ BGReads = function() {
 				return parseInt(elt.textContent);
 			}else if(t === "boolean") {
 				return elt.textContent === "true" ? true: false;
+			} else if(elt.childElementCount > 0){
+				const ret = {};
+				for (var i=0; i<elt.children.length; i++) {
+					if(elt.children[i] instanceof Element) {
+						 ret[elt.children[i].localName] = this.getTypedXML(elt.children[i]);
+					}
+				}
+				return ret;
 			} else if(!t){
 				return elt.textContent;
 			}else{
@@ -68,11 +77,12 @@ BGReads = function() {
 		}
 	}
 
-	self.setUserId = function(userId) {
-		self.userId = userId;
-	};
+	setUserId(userId) {
+		this.userId = userId;
+	}
 
-	self.getUser = function(boauth) {
+	getUser(boauth) {
+		var self = this;
 		return new Promise(function(resolve, reject){
 			self.queue.get(boauth, 'https://www.goodreads.com/api/auth_user')
 			     .then(function(oReq){
@@ -81,8 +91,8 @@ BGReads = function() {
 			     		 if(userElt) {
 			     		 	 var user = {
 			     		 	 	 id: userElt.getAttribute("id"),
-			     		 	 	 name: getXMLText(userElt, "name"),
-			     		 	 	 link: getXMLText(userElt, "link")
+			     		 	 	 name: self.getXMLText(userElt, "name"),
+			     		 	 	 link: self.getXMLText(userElt, "link")
 			     		 	 };
 			     		 	 console.debug("getUser =>", user);
 			     		 	 resolve(user);
@@ -92,14 +102,15 @@ BGReads = function() {
 			     		 }
 			     }).catch(reject);
 		});
-	};
+	}
 	
-	self.getShelves = function(boauth, start) {
+	getShelves(boauth, start) {
 		if(!start) {
 			start = 1;
 		}
+		var self = this;
 		return new Promise(function(resolve, reject){
-			self.queue.get(boauth, 'https://www.goodreads.com/shelf/list.xml')
+			self.queue.get(boauth, 'https://www.goodreads.com/shelf/list.xml?user_id='+self.userId)
 			     .then(function(oReq){
 			     		 //console.log("user_id", oReq.response, oReq.responseXML);
 			     		 var shelvesElt = oReq.responseXML.querySelector("shelves");
@@ -115,10 +126,10 @@ BGReads = function() {
 			     		 	 for(var i=0; i<allShelvesElt.length; i++){
 			     		 	 	 var shelfElt = allShelvesElt[i];
 			     		 	 	 var shelf = {}
-			     		 	 	 var children = shelfElt.childNodes;
+			     		 	 	 var children = shelfElt.children;
 			     		 	 	 for (var j = 0; j < children.length; j++) {
 			     		 	 	 	 if(children[j] instanceof Element){
-			     		 	 	 	 	 shelf[children[j].localName] = getTypedXML(children[j]);
+			     		 	 	 	 	 shelf[children[j].localName] = self.getTypedXML(children[j]);
 			     		 	 	 	 }
 			     		 	 	 }
 			     		 	 	 shelves.shelves.push(shelf);
@@ -131,17 +142,47 @@ BGReads = function() {
 			     		 }
 			     }).catch(reject);
 		});
-	};
+	}
 	
-	self.getReviews = function(boauth, start){
+	getReviews(boauth, start, since){
 		if(!start) {
 			start = 1;
 		}
+		var self = this;
 		return new Promise(function(resolve, reject){
-			self.queue.get(boauth, 'https://www.goodreads.com/review/list/' + self.userId + '?v=2', "document")
+		    var params = '?v=2&key=' + boauth.key + "&sort=date_updated";
+			self.queue.get(boauth, 'https://www.goodreads.com/review/list/' + self.userId + params)
 			     .then(function(oReq){
-			     		 console.log("getReviews", oReq.response, oReq.responseXML);
-			     		 var reviewElts = oReq.responseXML.querySelectorAll("#books tr.review");
+			     		 //console.log("getReviews", oReq.response, oReq.responseXML);
+
+			     		 var reviewsElt = oReq.responseXML.querySelector("reviews");
+			     		 if(reviewsElt) {
+			     		 	 var reviews = {
+			     		 	 	 start: reviewsElt.getAttribute("start"),
+			     		 	 	 end: reviewsElt.getAttribute("end"),
+			     		 	 	 total: reviewsElt.getAttribute("total"),
+			     		 	 	 reviews: []
+			     		 	 };
+			     		 	 var allReviewElts = reviewsElt.querySelectorAll('review');
+			     		 	 console.log("reviews:", allReviewElts);
+			     		 	 for(var i=0; i<allReviewElts.length; i++){
+			     		 	 	 var reviewElt = allReviewElts[i];
+			     		 	 	 var review = {}
+			     		 	 	 var children = reviewElt.childNodes;
+			     		 	 	 for (var j = 0; j < children.length; j++) {
+			     		 	 	 	 if(children[j] instanceof Element){
+			     		 	 	 	 	 review[children[j].localName] = self.getTypedXML(children[j]);
+			     		 	 	 	 }
+			     		 	 	 }
+			     		 	 	 reviews.reviews.push(review);
+			     		 	 }
+			     		 	 console.debug("getReviews(",start,") =>", reviews);
+			     		 	 resolve(reviews);
+			     		 }else{
+			     		 	 console.warn("No review in getReviews response?", oReq.response);
+			     		 	 reject("Can't get reviews");
+			     		 }
+			     		 /*var reviewElts = oReq.responseXML.querySelectorAll("#books tr.review");
 			     		 console.log("getReviews found", reviewElts.length, "reviews");
 			     		 var reviews = {};
 			     		 for(var i=0; i<reviewElts.length; i++) {
@@ -176,8 +217,9 @@ BGReads = function() {
 			     		 	 reviews[revid] = review;
 			     		 }
 			     		 console.debug("getReviews =>", reviews);
-			     		 resolve(reviews);
+			     		 resolve(reviews);*/
 			     }).catch(reject);
 		});
-	};
-};
+	}
+}
+

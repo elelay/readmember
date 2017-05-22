@@ -1,0 +1,29 @@
+{
+  "name": "readmember",
+  "version": "1.0.0",
+  "description": "Save Goodreads in a Kinto Server",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack -w --display-error-details --progress --colors",
+    "start": "web-ext run --firefox-profile=MeteorDev -s extension/ --verbose",
+    "pkg": "web-ext build -s extension --verbose"
+  },
+  "author": "",
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.23.0",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-react": "6.24.1",
+    "babel-preset-stage-2": "6.24.1",
+    "react": "15.5.4",
+    "react-dom": "15.5.4",
+    "web-ext": "1.9.1",
+    "webpack": "2.5.1"
+  },
+  "dependencies": {
+    "kinto": "^9.0.2"
+  }
+}

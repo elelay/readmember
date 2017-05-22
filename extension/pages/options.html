@@ -56,18 +56,30 @@
 	<legend>Server</legend>
 	<p>
 	<label>Url</label>
-	<input type="text" id="kinto_url">
+	<input type="text" id="kinto_url" value="https://readmember.elelay.fr">
 	</p>
+	<div id="kinto_register_section" class="">
 	<p>
-	<label>User/Password</label>
+	<label><input id="register_register" type="radio" name="register_login" disabled="disabled">Register:</label>
+	<label>User</label>
+	<input type="text" id="kinto_user">
+	<label>Password</label>
 	<input type="text" id="kinto_password">
-	<button id="kinto_gen">Generate</button>
+	<button id="kinto_register" disabled="disabled">Register</button>
+	</p>
+	<p id="kinto_register_feedback">
+	</p>
+	</div>
+	<p>
+	<label><input id="register_existing" type="radio" name="register_login" disabled="disabled" checked="checked">Existing account:</label>
+	<input type="text" id="kinto_auth">
+	<button id="kinto_save">Save</button>
 	</p>
 	</fieldset>
 	</div>
 
 	<script src="/readmember/settings.js"></script>
-	<script src="options.js"></script>
+	<script src="/dist/options.js"></script>
 </body>
 
 </html>

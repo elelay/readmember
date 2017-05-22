@@ -19,16 +19,13 @@
 			"CryptoJS/rollups/hmac-sha1.js",
 			"CryptoJS/components/enc-base64-min.js",
 			"oauth-1.0a.js",
-			"readmember/settings.js",
-			"readmember/bgreads.js",
-			"readmember/boauth.js",
-			"readmember/background.js"
+			"dist/background.js"
 		]
 	},
 	"content_scripts": [
 		{
 			"matches": ["*://*.goodreads.com/api/keys"],
-			"js": ["readmember/getkey.js"]
+			"js": ["dist/getkey.js"]
 		}
 	],
 	"permissions": [
@@ -43,6 +40,7 @@
   		"page": "pages/options.html"
   	},
   	"browser_action": {
-  		"default_icon": "icons/icon.svg"
+  		"default_icon": "icons/icon.svg",
+  		"browser_style": true
   	}
 }
